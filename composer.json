@@ -1,0 +1,14 @@
+{
+    "name": "celx/path-ride",
+    "description": "Light Weight PHP Framework for bootstrapping php project",
+    "license": "MIT",
+    "require": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Framework\\" : "framework",
+            "App\\" : "app"
+        }
+    }
+}
