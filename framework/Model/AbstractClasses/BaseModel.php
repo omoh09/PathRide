@@ -48,6 +48,12 @@ abstract class BaseModel
   public function find($id)
   {
     // returns a single instance of this
+    $fromDataBase = $this->databaseInstance->query("SELECT * FROM {$this->table()} where id = :id");
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();    
+    $instance = new $this;
+    return $instance;
   }
 
   public function save()
