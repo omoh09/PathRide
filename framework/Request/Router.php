@@ -1,15 +1,18 @@
 <?php
 namespace Framework\Request;
 
+use App\Http\Kernal;
 use Framework\Request\Interfaces\RequestInterface;
 
 class Router
 {
     private $request;
     private $supportedHttpMethods = array(
-        "GET",
-        "POST"
+        'get' => "GET",
+        'post' => "POST",
     );
+
+    private $httpKernal;
 
     function __construct(RequestInterface $request)
     {
@@ -18,6 +21,13 @@ class Router
 
     function __call($name, $args)
     {
+        if (strtolower($name) === 'middleware') {
+
+            list($middleware) = $args;
+
+            $this->handleRouteMiddleWare($this->request, $middleware);
+        }
+
         list($route, $resolver) = $args;
 
         if(!in_array(strtoupper($name), $this->supportedHttpMethods))
@@ -89,4 +99,15 @@ class Router
     {
         $this->resolve();
     }
+
+    protected function handleRouteMiddleWare(RequestInterface $request,$name)
+    {
+        $middleware = (new Kernal())->getMiddleWareClass($name);
+
+        if (!(new $middleware())->next($request)) {
+            throw new \Exception('Middleware Exception');
+        }
+
+    }
+
 }

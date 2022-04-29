@@ -12,7 +12,7 @@ $router->get('/', function() {
     return <<<HTML
       <h1>Hello world</h1>
 HTML;
-});
+})->middleware('web');
 
 //$router->get('/', );
 
