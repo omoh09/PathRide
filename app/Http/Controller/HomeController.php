@@ -10,7 +10,11 @@ class HomeController
     {
         $user = new User();
 
-        die(var_dump($user->all()));
+        foreach (User::get() as $user) {
+            die(var_dump($user));
+        }
+
+        die(var_dump(User::get()));
 
         return <<<HTML
   <h1>Index</h1>
