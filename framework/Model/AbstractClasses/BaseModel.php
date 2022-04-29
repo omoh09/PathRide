@@ -14,27 +14,22 @@ abstract class BaseModel
   {
     if (!$isFile) {
       $this->databaseInstance = new Database();
-      // die(var_dump($this->databaseInstance));
     }
   }
 
-  public function get()
+  public function callGet()
   {
-    // return iterateable or models instances
+    return new \ArrayObject($this->callAll());
   }
 
-  public function all()
+  public function callAll()
   {
     $data = [];
-    // die(var_dump("SELECT * FROM {$this->table()}"));
-    // die(var_dump($this));
-    $fromDataBase = $this->databaseInstance->query("SELECT * FROM {$this->table()}");
+    $fromDataBase = $this->databaseInstance->query("SELECT * FROM todos");
     $fromDataBase = $fromDataBase->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($fromDataBase as  $value) {
       $instance = new $this;
-      // $instance->test = 1;
-      // die(var_dump($instance));
       foreach ($value as $key => $element) {
         $instance->$key = $element;
       }
@@ -45,15 +40,18 @@ abstract class BaseModel
     return $data;
   }
 
-  public function find($id)
+  public function findWithId($id)
   {
-    // returns a single instance of this
-    $fromDataBase = $this->databaseInstance->query("SELECT * FROM {$this->table()} where id = :id");
-    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->execute();    
-    $instance = new $this;
-    return $instance;
+      $query = $this->databaseInstance->query("SELECT * FROM todos WHERE id = :id");
+      $query->bindParam(':id', $id, PDO::PARAM_INT);
+      $query->execute();
+      $data = $query->fetch(\PDO::FETCH_ASSOC);
+
+      $instance = new $this;
+      foreach ($data as $key => $element) {
+          $instance->$key = $element;
+      }
+      return $instance;
   }
 
   public function save()
@@ -82,3 +80,4 @@ abstract class BaseModel
     return $string;
   }
 }
+
