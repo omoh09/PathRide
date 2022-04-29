@@ -3,6 +3,7 @@
 use Framework\Request\Request;
 use Framework\Request\Router;
 use App\Http\Controller\HomeController;
+use App\Http\Controller\ProjectController;
 
 $router = new Router(new Request);
 
@@ -24,7 +25,9 @@ HTML;
 
 $router->get('/test', "HomeController@index");
 
-$router->post('/data', function($request) {
+$router->get('/project', [ProjectController::class, 'index']);
+$router->get('/single_project', [ProjectController::class, 'show']);
 
-    return json_encode($request->getBody());
+$router->post('/data', function($request) {
+  return json_encode($request->getBody());
 });

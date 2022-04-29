@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Framework\Model\Classes\Model;
 
-class User extends Model
+class Project extends Model
 {
-  //protected $table = 'todos';
   protected $table = 'projects';
 }

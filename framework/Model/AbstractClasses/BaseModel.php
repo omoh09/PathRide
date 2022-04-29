@@ -42,7 +42,9 @@ abstract class BaseModel
 
   public function findWithId($id)
   {
-      $query = $this->databaseInstance->query("SELECT * FROM todos WHERE id = {$id}");
+      $query = $this->databaseInstance->query("SELECT * FROM todos WHERE id = :id");
+      $query->bindParam(':id', $id, PDO::PARAM_INT);
+      $query->execute();
       $data = $query->fetch(\PDO::FETCH_ASSOC);
 
       $instance = new $this;
