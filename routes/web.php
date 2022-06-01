@@ -4,6 +4,8 @@ use Framework\Request\Request;
 use Framework\Request\Router;
 use App\Http\Controller\HomeController;
 use App\Http\Controller\ProjectController;
+use App\Models\Project;
+
 
 $router = new Router(new Request);
 
@@ -26,6 +28,15 @@ HTML;
 $router->get('/test', "HomeController@index");
 
 $router->get('/project', [ProjectController::class, 'index']);
+$router->get('/project/{id}', [ProjectController::class, 'show']);
+$router->post('/project', [ProjectController::class, 'store']);
+$router->put('/project/{id}', [ProjectController::class, 'update']);
+$router->delete('/project', [ProjectController::class, 'destroy']);
+
+$router->get('/pro',function(){
+  $project = new Project();
+  var_dump($project->get());
+});
 $router->get('/single_project', [ProjectController::class, 'show']);
 
 $router->post('/data', function($request) {

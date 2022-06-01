@@ -25,7 +25,8 @@ abstract class BaseModel
   public function callAll()
   {
     $data = [];
-    $fromDataBase = $this->databaseInstance->query("SELECT * FROM todos");
+    //$fromDataBase = $this->databaseInstance->query("SELECT * FROM todos");
+    $fromDataBase = $this->databaseInstance->query("SELECT * FROM projects");
     $fromDataBase = $fromDataBase->fetchAll(\PDO::FETCH_ASSOC);
 
     foreach ($fromDataBase as  $value) {
@@ -42,7 +43,8 @@ abstract class BaseModel
 
   public function findWithId($id)
   {
-      $query = $this->databaseInstance->query("SELECT * FROM todos WHERE id = :id");
+      //$query = $this->databaseInstance->query("SELECT * FROM todos WHERE id = :id");
+      $query = $this->databaseInstance->query("SELECT * FROM projects WHERE id = :id");
       $query->bindParam(':id', $id, PDO::PARAM_INT);
       $query->execute();
       $data = $query->fetch(\PDO::FETCH_ASSOC);
@@ -56,12 +58,46 @@ abstract class BaseModel
 
   public function save()
   {
-    //save to the instance
+    $handle = $this->databaseInstance->prepare('INSERT into projects (Id, title, description) VALUES (default, :title, :description)');
+    $handle->bindParam(':title', $title, PDO::PARAM_STR);
+    $handle->bindParam(':description', $description, PDO::PARAM_STR); 
+    $handle->execute();
+
+    $instance = new $this;
+    foreach ($handle as $key => $element) {
+        $instance->$key = $element;
+    }
+    return $instance;
   }
 
   public function update($id)
   {
-    //
+    $handle = $this->databaseInstance->prepare('UPDATE projects SET (title "=" :title, description = :description) WHERE id = :id');
+    $handle->bindParam(':title', $title, PDO::PARAM_STR);
+    $handle->bindParam(':description', $description, PDO::PARAM_STR); 
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT); 
+    $handle->bindParam(':id', $id, PDO::PARAM_INT);
+    $handle->execute();
+
+    $instance = new $this;
+    foreach ($handle as $key => $element) {
+        $instance->$key = $element;
+    }
+    return $instance;
+  }
+
+  public function delete($id)
+  {
+    $stmt = $pdo->prepare('DELETE FROM projects WHERE id = :id');
+    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    $instance = new $this;
+    foreach ($handle as $key => $element) {
+        $instance->$key = $element;
+    }
+    return $instance;
   }
 
   public function getModelName()

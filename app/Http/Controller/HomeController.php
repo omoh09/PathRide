@@ -9,11 +9,7 @@ class HomeController
     public function index()
     {
         $user = new User();
-
-        foreach (User::get() as $user) {
-            die(var_dump($user));
-        }
-
+        //die(var_dump($user->get()));
         die(var_dump(User::get()));
 
         return <<<HTML

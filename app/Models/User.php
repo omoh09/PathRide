@@ -6,6 +6,6 @@ use Framework\Model\Classes\Model;
 
 class User extends Model
 {
-  //protected $table = 'todos';
-  protected $table = 'projects';
+  protected $table = 'todos';
+  //protected $table = 'projects';
 }
